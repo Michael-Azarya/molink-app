@@ -130,26 +130,52 @@ app.delete('/api/folders/:folderId', authenticateToken, async (req, res) => {
 });
 
 // --- MEMO ROUTES ---
+app.get('/api/memos', authenticateToken, async (req, res) => {
+    try {
+        const { username } = req.user;
+        const searchTerm = req.query.search || '';
+
+        let sql = `SELECT m.id, m.judul, m.date, m.icon_name 
+                   FROM memo m
+                   JOIN folder f ON m.folder_id = f.id
+                   JOIN vault v ON f.vault_id = v.id
+                   WHERE v.bunker_username = ?`;
+        const params = [username];
+
+        if (searchTerm) {
+            sql += ` AND m.judul LIKE ?`;
+            params.push(`%${searchTerm}%`);
+        }
+
+        sql += ` ORDER BY m.date DESC`;
+        const [memos] = await dbPool.execute(sql, params);
+        res.json(memos);
+    } catch (error) {
+        console.error('Get All Memos Error:', error);
+        res.status(500).json({ message: 'Failed to fetch all memos.' });
+    }
+});
+
+// Get memos for a specific folder, with optional search
 app.get('/api/memos/:folderId', authenticateToken, async (req, res) => {
     try {
         const { folderId } = req.params;
-        const [memos] = await dbPool.execute('SELECT id, judul, date, icon_name FROM memo WHERE folder_id = ? ORDER BY date DESC', [folderId]);
+        const searchTerm = req.query.search || '';
+
+        let sql = `SELECT id, judul, date, icon_name FROM memo WHERE folder_id = ?`;
+        const params = [folderId];
+
+        if (searchTerm) {
+            sql += ` AND judul LIKE ?`;
+            params.push(`%${searchTerm}%`);
+        }
+
+        sql += ` ORDER BY date DESC`;
+        const [memos] = await dbPool.execute(sql, params);
         res.json(memos);
     } catch (error) {
         console.error('Get Memos Error:', error);
         res.status(500).json({ message: 'Failed to fetch memos.' });
-    }
-});
-
-app.get('/api/memo/:memoId', authenticateToken, async (req, res) => {
-    try {
-        const { memoId } = req.params;
-        const [memo] = await dbPool.execute('SELECT * FROM memo WHERE id = ?', [memoId]);
-        if (memo.length > 0) res.json(memo[0]);
-        else res.status(404).json({ message: 'Memo not found.' });
-    } catch (error) {
-        console.error('Get Single Memo Error:', error);
-        res.status(500).json({ message: 'Failed to fetch memo details.' });
     }
 });
 

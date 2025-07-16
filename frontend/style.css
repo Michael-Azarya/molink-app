@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #007bff;
+    --primary-color: #4f9aea;
     --secondary-color: #4CAF50;
     --background-color: #F4F7FC;
     --font-color: #333;
@@ -121,7 +121,8 @@ header #logout-btn {
 
 #search-bar {
     width: 100%;
-    padding: 10px 15px;
+    /* Increased right padding from 15px to 40px to make space for the icon */
+    padding: 10px 40px 10px 15px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
 }
@@ -150,7 +151,7 @@ header #logout-btn {
     padding: 2rem;
     background-color: var(--white-color);
     height: calc(100vh - 70px);
-    border-right: 1px solid #ba6868;
+    border-right: 1px solid #e0e0e0;
 }
 
 .sidebar ul {

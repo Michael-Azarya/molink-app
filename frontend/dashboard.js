@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Configuration & Page Protection ---
-    const API_URL = 'http://localhost:3001';
+    const API_URL = 'http://localhost:3001'; // CHANGE THIS to your live Render URL for production
     const token = localStorage.getItem('moLINK_token');
 
     if (!token) {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 2. State Variables ---
     let folders = [];
     let memos = [];
-    let selectedFolderId = 'all'; // Default to 'all'
+    let selectedFolderId = 'all';
     let alphaSortDirection = 'a-z';
     let itemToDelete = { id: null, type: null };
 
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addCategoryBtn = document.getElementById('add-category-btn');
     const linkList = document.getElementById('link-list');
     const sortSelect = document.getElementById('sort-by');
+    const searchBar = document.getElementById('search-bar'); // Added search bar
     const showAddModalBtn = document.getElementById('show-add-modal-btn');
     const addModal = document.getElementById('add-modal');
     const viewModal = document.getElementById('view-modal');
@@ -97,14 +98,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. Memo (Link) Functions ---
     async function fetchAndRenderMemos() {
+        const searchTerm = searchBar.value;
+        let endpoint = '';
         try {
             if (selectedFolderId === 'all') {
-                memos = await apiFetch('/api/memos');
+                endpoint = '/api/memos';
             } else if (selectedFolderId) {
-                memos = await apiFetch(`/api/memos/${selectedFolderId}`);
+                endpoint = `/api/memos/${selectedFolderId}`;
             } else {
                 memos = [];
+                renderMemoList();
+                return;
             }
+            if (searchTerm) {
+                endpoint += `?search=${encodeURIComponent(searchTerm)}`;
+            }
+            memos = await apiFetch(endpoint);
             renderMemoList();
         } catch (error) {
             console.error("Error fetching memos:", error);
@@ -224,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addCategoryBtn.addEventListener('click', addFolder);
     addCategoryInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addFolder(); });
     sortSelect.addEventListener('change', renderMemoList);
+    searchBar.addEventListener('input', fetchAndRenderMemos); // Search listener
     logoutBtn.addEventListener('click', (e) => { e.preventDefault(); localStorage.removeItem('moLINK_token'); window.location.href = 'login.html'; });
     showAddModalBtn.addEventListener('click', () => {
         linkCategorySelect.innerHTML = '';
