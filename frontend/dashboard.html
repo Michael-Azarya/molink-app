@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - moLINK</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+    <div id="dashboard-page">
+        <header>
+            <h1 class="logo">moLINK</h1>
+            <div class="search-container">
+                <input type="search" id="search-bar" placeholder="search docs, pdf, etc">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <path
+                        d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+                </svg>
+            </div>
+            <a href="#" id="logout-btn">Log out</a>
+        </header>
+        <main class="dashboard-main">
+            <aside class="sidebar">
+                <h3>Categories</h3>
+                <ul id="category-list"></ul>
+                <div class="add-category-container">
+                    <input type="text" id="new-category-input" placeholder="Add new category...">
+                    <button id="add-category-btn">+</button>
+                </div>
+            </aside>
+            <section class="content">
+                <div class="content-header">
+                    <h2 id="welcome-message">Welcome Back...</h2>
+                    <div class="sort-container">
+                        <label for="sort-by">Sort by</label>
+                        <select id="sort-by">
+                            <option value="latest">Latest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="alpha">Alphabetical</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="link-list" class="link-grid"></div>
+            </section>
+        </main>
+        <button id="show-add-modal-btn" class="fab">+</button>
+    </div>
+
+    <!-- MODALS -->
+    <div id="add-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <span class="material-symbols-outlined modal-icon">link</span>
+            <h2>Add New Link</h2>
+            <form id="add-link-form">
+                <input type="text" id="link-title" placeholder="Judul (Title)" required>
+                <textarea id="link-description" placeholder="Deskripsi (Description)" rows="4"></textarea>
+                <div class="icon-selector">
+                    <p>Choose an Icon:</p>
+                    <div class="icon-choices"><span class="material-symbols-outlined selected"
+                            data-icon-name="description">description</span><span class="material-symbols-outlined"
+                            data-icon-name="videocam">videocam</span><span class="material-symbols-outlined"
+                            data-icon-name="link">link</span></div>
+                </div>
+                <select id="link-category-select" required>
+                    <option value="" disabled selected>-- Select a Category --</option>
+                </select>
+                <input type="url" id="link-url" placeholder="Link (e.g., https://example.com)" required>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+    </div>
+    <div id="view-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <span class="material-symbols-outlined modal-icon">link</span>
+            <h2 id="view-title"></h2>
+            <p id="view-description"></p>
+            <div class="link-box"><span>Link:</span><input type="text" id="view-url" readonly><button id="copy-link-btn"
+                    title="Copy Link"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="copy-icon">
+                        <path
+                            d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z" />
+                    </svg></button></div>
+            <a id="go-link-btn" href="#" target="_blank" class="btn btn-primary">Go</a>
+        </div>
+    </div>
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="close-modal-btn">&times;</button>
+            <span class="material-symbols-outlined modal-icon">edit_note</span>
+            <h2>Edit Link</h2>
+            <form id="edit-link-form">
+                <input type="hidden" id="edit-memo-id">
+                <input type="text" id="edit-link-title" placeholder="Judul (Title)" required>
+                <textarea id="edit-link-description" placeholder="Deskripsi (Description)" rows="4"></textarea>
+                <div class="icon-selector">
+                    <p>Choose an Icon:</p>
+                    <div class="icon-choices" id="edit-icon-choices"><span class="material-symbols-outlined"
+                            data-icon-name="description">description</span><span class="material-symbols-outlined"
+                            data-icon-name="videocam">videocam</span><span class="material-symbols-outlined"
+                            data-icon-name="link">link</span></div>
+                </div>
+                <select id="edit-link-category-select" required></select>
+                <input type="url" id="edit-link-url" placeholder="Link (e.g., https://example.com)" required>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <span class="material-symbols-outlined modal-icon">delete_forever</span>
+            <h2>Are you sure?</h2>
+            <p>This action cannot be undone.</p>
+            <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                <button id="cancel-delete-btn" class="btn" style="background-color: #777;">Cancel</button>
+                <button id="confirm-delete-btn" class="btn" style="background-color: #E53935;">Delete</button>
+            </div>
+        </div>
+    </div>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>
