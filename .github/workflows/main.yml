@@ -1,0 +1,39 @@
+# The name of your workflow
+name: Deploy Frontend to GitHub Pages
+
+# Controls when the action will run.
+on:
+  # Runs on pushes targeting the main branch
+  push:
+    branches: ["main"]
+    
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "deploy"
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Step 2: This is the key step. It takes your /frontend folder and prepares it for deployment.
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Tell it to upload the contents of the 'frontend' directory
+          path: './frontend'
+
+      # Step 3: This step actually deploys the prepared content to GitHub Pages.
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

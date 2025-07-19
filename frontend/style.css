@@ -121,7 +121,6 @@ header #logout-btn {
 
 #search-bar {
     width: 100%;
-    /* Increased right padding from 15px to 40px to make space for the icon */
     padding: 10px 40px 10px 15px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
@@ -479,4 +478,27 @@ header #logout-btn {
 
 .delete-memo-btn:hover {
     color: #E53935;
+}
+
+.captcha-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.captcha-container #captcha-question {
+    font-weight: 500;
+    color: #555;
+    user-select: none;
+}
+
+.captcha-container #captcha-input {
+    width: 80px;
+    margin-bottom: 0;
+    text-align: center;
 }

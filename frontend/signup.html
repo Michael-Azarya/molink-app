@@ -18,7 +18,14 @@
             <form id="signup-form">
                 <h2>Sign Up to moLINK</h2>
                 <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="email" id="signup-email" placeholder="Email" required>
                 <input type="password" id="signup-password" placeholder="Password" required>
+
+                <div class="captcha-container">
+                    <span id="captcha-question">What is 5 + 3?</span>
+                    <input type="number" id="captcha-input" placeholder="Answer" required>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Sign Up</button>
                 <p class="form-switcher">Already have an account? <a href="login.html">Log In</a></p>
             </form>

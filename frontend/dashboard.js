@@ -171,8 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
             viewModal.querySelector('.modal-icon').textContent = memo.icon_name || 'link';
             viewModal.classList.remove('hidden');
         } catch (error) {
-            alert('Could not load memo details.');
+            alert(`Could not load memo details: ${error.message}`);
         }
+
     }
 
     async function openEditModal(memoId) {
@@ -197,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             editModal.classList.remove('hidden');
         } catch (error) {
-            alert('Could not load memo details for editing.');
+            alert(`Could not load memo details for editing: ${error.message}`);
         }
     }
 
@@ -229,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- 8. Event Listeners ---
+
     addCategoryBtn.addEventListener('click', addFolder);
     addCategoryInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addFolder(); });
     sortSelect.addEventListener('change', renderMemoList);
@@ -318,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 9. Initial Load ---
+
     function init() {
         const parseJwt = (token) => {
             try { return JSON.parse(atob(token.split('.')[1])); }
